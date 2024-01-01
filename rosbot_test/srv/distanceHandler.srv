@@ -1,0 +1,7 @@
+#odomHandler.msg
+
+---
+float32 total_distance
+float32 total_fwd_distance
+
+
