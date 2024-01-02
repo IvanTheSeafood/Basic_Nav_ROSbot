@@ -1,0 +1,7 @@
+<launch>
+  <node pkg="rosbot_bath" type="lidarHandler.py" name="lidarHandler" />
+  <node pkg="rosbot_bath" type="objectAvoid.py" name="objectAvoid" output="screen" />
+  <node pkg="rosbot_bath" type="distanceHandler.py" name="distanceHandler" />
+  <node pkg="rosbot_bath" type="terminate.py" name="terminate" output="screen" respawn="false"/>
+  <node pkg="rosbot_bath" type="yawHandler.py" name="yawHandler" />
+</launch>
