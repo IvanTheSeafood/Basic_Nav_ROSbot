@@ -179,7 +179,6 @@ catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES rosbot_bath
   CATKIN_DEPENDS roscpp
-  actionlib_msgs
   std_msgs
 #  DEPENDS system_lib
 )
