@@ -1,8 +1,8 @@
-rosbot_test:
+#rosbot_test:
 
 --------------------------------------------------------------------------
 
-WHICH FILES GO WHERE:
+##WHICH FILES GO WHERE:
 
 -In [workspace name]/src/[package name], ie: ~/ros_workspace/src/rosbot_bath, REPLACE:
 	- package.xml
@@ -26,10 +26,10 @@ basically all the .py scripts in the "SCRIPTS" folder
 -In [workspace name]/src/[package name]/launch, ie: ~/ros_workspace/src/rosbot_bath/launch, ADD:
 	-rosbot_test.launch
 
-REMINDER: 1. Make them executable programs (either by checking the option in file properties tab/ do "chmod +x [path to file]/[filename]")
+###REMINDER: 1. Make them executable programs (either by checking the option in file properties tab/ do "chmod +x [path to file]/[filename]")
 	  2. Do "catkin_make" (and probably "source /devel.setup.sh") after doing all the modifications required
 	  
-TO RUN THE SCRIPTS:
+##TO RUN THE SCRIPTS:
 
 In [workspace name]/src/[package name], ie: ~/ros_workspace/src/rosbot_bath:
 	1: ./run_rosbot.sh
@@ -39,7 +39,7 @@ In seperate terminal, in [workspace name], ie: ~/ros_workspace:
 
 --------------------------------------------------------------------------
 
--Restructured the sensor handling data such that:
+##-Restructured the sensor handling data such that:
 1. instead of having the only logic script subscribing to all the sensory data and doing all the logic stuff to process them, 
 2. we now have different nodes subscribed to different sensors, process them into data used by the logic handling program, 
 3. then publish/respond-when-needed the data to the logic node for all the fancy stuff
@@ -53,15 +53,15 @@ only split into different scripts with extra lines of code to link them up.
 
 -For a visual on how the structure has changed, please refer to "Ros Structure Comparison.png"
 
-NOTE: The way the logic node interacts with the controls of the robot is completely untouched, as I'm tired AF and this is the part where we can add action nodes, which I have 0 clue how they work.
+####NOTE: The way the logic node interacts with the controls of the robot is completely untouched, as I'm tired AF and this is the part where we can add action nodes, which I have 0 clue how they work.
 --------------------------------------------------------------------------
 
-In the new Structure:
+##In the new Structure:
 
 -the new TOPICS have the same names as the new NODES and new SCRIPTS because I'm not sure which is which either and I can't be bothered to change them now
 -the Proxy Sensors are used directly in the code and they are needed constantly, so they are directly PUBLISHED to the logic node
 
-new yawHandler.py:
+###new yawHandler.py:
 1. takes imu data by subbing to /imu
 2. does the euler thing to turn them into uderstandable orientations
 3. change the measurement of current_yaw (the only orientation we care about) from radians to degrees
@@ -70,7 +70,7 @@ new yawHandler.py:
 - The odomHandler needs constant update on robot orientation to do fwd_distance measurents, topic is preferred, 
 -else service would have been fine as the data is only needed during CORRECTION state of the robot
 
-new distanceHandler.py:
+###new distanceHandler.py:
 1. takes odom data by SUBBING to /odom
 2. does the distance formula things
 3. takes yaw error data by SUBBING to yawHandler
@@ -79,54 +79,54 @@ new distanceHandler.py:
 5. responds the data with topic distanceHandler as a SERVICE
 - The distance logging is just for datalogging, just call it occassionally and on code termination
 
-new distanceHandler.srv:
+###new distanceHandler.srv:
 -new .srv file as distanceHandler returns to distance datas:
 	1. total_distance: total distance the robot has travelled in all 4 directions
 	2. total_fwd_distance: total distance the robot has travelled FORWARDS
 
-new lidarHandler.py:
+###new lidarHandler.py:
 1. takes the massive array of lidar values from /LaserScan
 2. does the split-lidar-data-into-quadrents thing
 3. PUBLISHS the 3 data values with topic lidarHandler
 - The bot constantly searches stuff with lidar data 24/7, it's better to use topics for constant data updates
 
-new lidarHandler.msg:
+###new lidarHandler.msg:
 - custom .msg file cause the script publishes 3 float32 datas for:
 	-front
 	-right
 	-left
 
-modified objectAvoid.py:
+###modified objectAvoid.py:
 -Same Script as the old test.py, but with the sensory logic functions removed
 -renamed for convience
 
-new termination.py:
+###new termination.py:
 -Simply here to request and log distance info from odomHandler on program termination
 
-new rosbot_test.launch:
+###new rosbot_test.launch:
 -runs all the scripts at once
 -you still need a seperate terminal to do ./run_rosbot.sh though
 
-modified CMakeList.txt and package.xml:
+###modified CMakeList.txt and package.xml:
 -needed so that the new .srv and .msg files could work
 
 --------------------------------------------------------------------------
 
--Benefits:
+##-Benefits:
 In the report:
 -clearer structure now that the big code is separated into smaller ones 
 -better resource management as less important functions are now services that only run when needed
 -better division of labor as more ppl can work on different parts of the robot instead of everyone diving into the same code
 -probably some sort of more efficient debugging/failsafe that i need time to think about how to BS through
 
-In reality:
+##In reality:
 -the code is restructured so much that even if James can tell we copied the logic online,he still has to give us credit
 -showcase of more ROS features to impress James that we know our shit, and more words to write in our report
 -and a valid reason to use .launch files to launch multiple scripts, which is more ROS features and words in our report
 
 --------------------------------------------------------------------------
 
-CMakeLists.txt MODIFICATIONS:
+##CMakeLists.txt MODIFICATIONS:
 
 Have something like this:
 
