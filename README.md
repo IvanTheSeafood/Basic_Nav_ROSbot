@@ -55,7 +55,7 @@ only split into different scripts with extra lines of code to link them up.
 - However, this assumes the original logic works fine, and you already understand what's going on.
 
 - For a visual on how the structure has changed, please refer to "Ros Structure Comparison.png"
-![](/Ros Structure Comparison.png)
+![](img/Ros%20Structure%20Comparison.png)
 #### NOTE: The way the logic node interacts with the controls of the robot is completely untouched, as I'm tired AF and this is the part where we can add action nodes, which I have 0 clue how they work.
 
 ---
